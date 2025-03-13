@@ -20,10 +20,7 @@ app.whenReady().then(() => {
   // Disable certificate verification (DEVELOPMENT ONLY)
   app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
     // Only if the URL is your WSL development API 
-    if (url.includes('172.27.87.8')) {
-      event.preventDefault();
-      callback(true);
-    }
+    callback(true);
   });
 
 });
