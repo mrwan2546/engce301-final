@@ -3,6 +3,8 @@ module.exports = {
     apiConfig: {
       serverKey:
         "1aaZ!ARgAQGuQzp00D5D000000.mOv2jmhXkfIsjgywpCIh7.HZpc6vED1LCbc90DTaVDJwdNqbTW5r4uZicv8AFfkOE1ialqnR8UN5.wnAgh090h",
+      jwtKey:
+        "1aaZ!ARgAQGuQzp00D5D000000.mOv2jmhXkfIsjgywpCIh7.HZpc6vED1LCbc90DTaVDJwdNqbTW5r4uZicv8AFfkOE1ialqnR8UN5.wnAgh090h",
     },
     sqlConfig: {
       server: "100.96.0.8",
@@ -19,9 +21,17 @@ module.exports = {
         instancename: "100.96.0.8", // SQL Server instance name
       },
     },
+    parseConfig: {
+      apiURL: "https://localhost:5006/api",
+      appId: "wallboardapi",
+      masterKey: "wallboardapi",
+      javascriptKey: "wallboardapi",
+    },
   },
   production: {
     apiConfig: {
+      jwtKey:
+        "1aaZ!ARgAQGuQzp00D5D000000.mOv2jmhXkfIsjgywpCIh7.HZpc6vED1LCbc90DTaVDJwdNqbTW5r4uZicv8AFfkOE1ialqnR8UN5.wnAgh090h",
       serverKey:
         "1aaZ!ARgAQGuQzp00D5D000000.mOv2jmhXkfIsjgywpCIh7.HZpc6vED1LCbc90DTaVDJwdNqbTW5r4uZicv8AFfkOE1ialqnR8UN5.wnAgh090h",
     },
@@ -39,6 +49,12 @@ module.exports = {
         trustedconnection: true,
         instancename: "10.21.47.33", // SQL Server instance name
       },
+    },
+    parseConfig: {
+      apiURL: "https://lab-parse-server.cpe-rmutl.net/team06/api",
+      appId: "wallboardapi",
+      masterKey: "wallboardapi",
+      javascriptKey: "wallboardapi",
     },
   },
 }["development"];

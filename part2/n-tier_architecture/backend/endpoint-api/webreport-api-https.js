@@ -1,29 +1,42 @@
 const hapi = require("@hapi/hapi");
 let express = require("express");
+const {
+  createUserLoginHistories,
+  upsertAgent,
+  createAgentMessageHistories,
+} = require("./provider/wallboard-parse");
 const AuthBearer = require("hapi-auth-bearer-token");
-// let fs = require("fs");
-// let cors = require("cors");
+const jwt = require("jsonwebtoken");
 
 const OnlineAgent = require("./repository/OnlineAgent");
+const https = require("https");
 
 //-------------------------------------
 
-//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const apiport = 8443;
 
 var url = require("url");
 const { hapiResponse } = require("./utils/response");
-const { loginSchema } = require("./schema/login");
-const { getUserByUsername } = require("./repository/Users");
+const { loginSchema, logoutSchema } = require("./schema/login");
+const {
+  getUserByUsername,
+  createLoginNLogoutHistories,
+} = require("./repository/Users");
 const { compare } = require("bcrypt");
 const { apiConfig } = require("./config");
+const { getMiddlewareToken } = require("./middleware/token");
 
 //init Express
 var app = express();
 //init Express Router
 var router = express.Router();
 //var port = process.env.PORT || 87;
+// Init reject HTTP(S)
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
 //REST route for GET /status
 router.get("/status", function (req, res) {
@@ -241,23 +254,58 @@ const init = async () => {
         });
       }
 
-      return hapiResponse(h, {
-        statusCode: 200,
-        message: "Success",
-        data: {
+      try {
+        // Update agent wallboard
+        await upsertAgent({
           agent_code: user.agent_code,
-        },
-      });
+          agent_name: user.AgentName,
+          agent_status: user.AgentStatus,
+          team: "6",
+          is_login: "1",
+        });
+        // Store login history
+        await createUserLoginHistories({
+          agent_code: user.agent_code,
+          agent_name: user.AgentName,
+          action: "1",
+        });
+        // Update agent
+        await OnlineAgent.OnlineAgentRepo.updateAgentSession(
+          user.agent_code,
+          "LOGIN"
+        );
+
+        // Create JWT token
+        const token = jwt.sign(
+          { agent_code: user.agent_code },
+          apiConfig.jwtKey,
+          {
+            expiresIn: "1d",
+            algorithm: "HS256",
+          }
+        );
+
+        return hapiResponse(h, {
+          statusCode: 200,
+          message: "Success",
+          data: {
+            agent_code: user.agent_code,
+            agent_name: user.AgentName,
+            agent_status: user.AgentStatus,
+            agent_status_code: user.AgentStatus,
+            is_login: "1",
+            token,
+          },
+        });
+      } catch (e) {
+        console.log(e);
+      }
     },
   });
 
-  /*-------------------------------------------*/
-  /* API Name: getOnlineAgentByAgentCode       */
-  /* Method: 'GET'                             */
-  /*-------------------------------------------*/
   server.route({
     method: "GET",
-    path: "/api/v1/getOnlineAgentByAgentCode",
+    path: "/api/v1/auth/logout",
     config: {
       cors: {
         origin: ["*"],
@@ -275,47 +323,62 @@ const init = async () => {
         ],
         credentials: true,
       },
+      pre: [
+        {
+          method: getMiddlewareToken,
+          assign: "user",
+        },
+      ],
     },
     handler: async (request, h) => {
-      let param = request.query;
+      const user = request.pre.user;
+      if (!user)
+        return hapiResponse(h, {
+          statusCode: 400,
+          message: "Invalid token",
+          data: null,
+        });
 
-      try {
-        console.dir(param);
-        //return ('API1');
+      // Get agent
+      const { error, data = null } =
+        await OnlineAgent.OnlineAgentRepo.getOnlineAgentByAgentCode(user);
+      if (!error) {
+        // Store login history
+        await createUserLoginHistories({
+          agent_code: data.agent_code,
+          agent_name: data.AgentName,
+          action: "0",
+        });
+        // Update agent wallboard
+        await upsertAgent({
+          agent_code: data.agent_code,
+          agent_name: data.AgentName,
+          agent_status: data.AgentStatus,
+          team: "6",
+          is_login: "0",
+        });
+        // Update agent
+        await OnlineAgent.OnlineAgentRepo.updateAgentSession(
+          data.agent_code,
+          "LOGOUT"
+        );
 
-        if (param.agentcode == null)
-          return h
-            .response({
-              error: true,
-              statusCode: 400,
-              errMessage: "Please provide agentcode.",
-            })
-            .code(400);
-        else {
-          const responsedata =
-            await OnlineAgent.OnlineAgentRepo.getOnlineAgentByAgentCode(
-              `${param.agentcode}`
-            );
-
-          if (responsedata.statusCode == 500)
-            return h
-              .response({
-                error: "Something went wrong. Please try again later.",
-              })
-              .code(500);
-          else if (responsedata.statusCode == 200) return responsedata;
-          else if (responsedata.statusCode == 404)
-            return h.response(responsedata).code(404);
-          else
-            return h
-              .response({
-                error: "Something went wrong. Please try again later.",
-              })
-              .code(500);
+        try {
+          return hapiResponse(h, {
+            statusCode: 200,
+            message: "Success",
+            data: null,
+          });
+        } catch (e) {
+          console.log(e);
         }
-      } catch (err) {
-        console.dir(err);
       }
+
+      return hapiResponse(h, {
+        statusCode: 200,
+        message: "Success (Session expired)",
+        data: null,
+      });
     },
   });
 
@@ -387,6 +450,15 @@ const init = async () => {
           console.log("AgentCode: " + AgentCode);
 
           if (!responsedata.error) {
+            // Update agent wallboard
+            await upsertAgent({
+              agent_code: AgentCode,
+              agent_name: AgentName,
+              agent_status: AgentStatus,
+              team: "6",
+              is_login: "1",
+            });
+
             if (clientWebSockets[AgentCode]) {
               console.log("Sennding MessageType");
               clientWebSockets[AgentCode].send(
@@ -485,6 +557,17 @@ const init = async () => {
                 Message: Message,
               })
             );
+
+            // Store histories
+            await createAgentMessageHistories({
+              from: {
+                agent_code: FromAgentCode,
+              },
+              to: {
+                agent_code: ToAgentCode,
+              },
+              message: Message,
+            });
 
             return {
               error: false,
