@@ -2,6 +2,7 @@ var express = require('express');
 var ParseDashboard = require('parse-dashboard');
 var cors = require('cors');
 var fs = require('fs');
+const { parseConfig: config } = require('./config');
 
 // You might need this. Use 'true' or 'false' depending your connection.
 var options = { allowInsecureHTTP: true };
@@ -17,10 +18,10 @@ var cert_options = {
 var trustProxy = true;
 var dashboard = new ParseDashboard({
   "apps": [{
-    "serverURL": 'https://localhost:' + apiport + '/api',
-    "appId": 'wallboardapi',
-    "masterKey": 'wallboardapi',
-    "appName": 'wallboardapi',
+    "serverURL": config.serverURL,
+    "appId": config.appId,
+    "masterKey": config.masterKey,
+    "appName": config.appId,
     "production": true
   }],
   "trustProxy": 1,
