@@ -9,6 +9,11 @@ Parse.initialize(
   parseConfig.masterKey
 );
 
+console.log(`API URL: ${Parse.serverURL}`);
+console.log(`APP ID: ${Parse.applicationId}`);
+console.log(`Master key: ${Parse.masterKey}`);
+console.log(`JS key: ${Parse.javaScriptKey}`);
+
 /**
  *
  * @param {{
@@ -22,7 +27,12 @@ function createUserLoginHistories(data) {
   UserLogin.set("agent_code", data.agent_code);
   UserLogin.set("agent_name", data.agent_name);
   UserLogin.set("is_login", data.action);
-  UserLogin.save();
+  UserLogin.save(
+    {},
+    {
+      useMasterKey: true,
+    }
+  );
 }
 
 /**
@@ -36,14 +46,20 @@ function createUserLoginHistories(data) {
  * }} data
  */
 function upsertAgent(data) {
-  Parse.Cloud.run("postOnlineAgentListByTeam", {
-    AgentCode: data.agent_code,
-    AgentName: data.agent_name,
-    Team: "6",
-    AgentStatus: data.agent_status,
-    AgentStatusCode: data.agent_status,
-    IsLogin: data.is_login,
-  });
+  Parse.Cloud.run(
+    "postOnlineAgentListByTeam",
+    {
+      AgentCode: data.agent_code,
+      AgentName: data.agent_name,
+      Team: "6",
+      AgentStatus: data.agent_status,
+      AgentStatusCode: data.agent_status,
+      IsLogin: data.is_login,
+    },
+    {
+      useMasterKey: true,
+    }
+  );
 }
 
 /**
@@ -63,7 +79,12 @@ function createAgentMessageHistories(data) {
   AgentMessage.set("from_agent_code", data.from.agent_code);
   AgentMessage.set("to_agent_code", data.to.agent_code);
   AgentMessage.set("message", data.message);
-  AgentMessage.save();
+  AgentMessage.save(
+    {},
+    {
+      useMasterKey: true,
+    }
+  );
 }
 
 module.exports = {

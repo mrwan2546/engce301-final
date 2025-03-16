@@ -208,6 +208,7 @@
             url: APIServer + "/postSendMessage",
             headers: {
               Authorization: `Bearer ${serverKey}`,
+              "x-auth-token": localStorage.getItem("token"),
             },
             data: JSON.stringify(data),
             contentType: "application/json",

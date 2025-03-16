@@ -18,7 +18,7 @@ var cert_options = {
 var trustProxy = true;
 var dashboard = new ParseDashboard({
   "apps": [{
-    "serverURL": config.serverURL,
+    "serverURL": "https://lab-parse-server.cpe-rmutl.net/team06/api",
     "appId": config.appId,
     "masterKey": config.masterKey,
     "appName": config.appId,

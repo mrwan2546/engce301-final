@@ -9,14 +9,14 @@ const AuthBearer = require("hapi-auth-bearer-token");
 const jwt = require("jsonwebtoken");
 
 const OnlineAgent = require("./repository/OnlineAgent");
-const https = require("https");
 
 //-------------------------------------
-
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 const apiport = 4006;
 const wsPort = 4016;
+// if (process.env.NODE_ENV !== "production") {
+//   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// }
 
 var url = require("url");
 const { hapiResponse } = require("./utils/response");
@@ -263,11 +263,6 @@ const init = async () => {
           agent_name: user.AgentName,
           action: "1",
         });
-        // Update agent
-        await OnlineAgent.OnlineAgentRepo.updateAgentSession(
-          user.agent_code,
-          "LOGIN"
-        );
 
         // Create JWT token
         const token = jwt.sign(
@@ -351,11 +346,6 @@ const init = async () => {
           team: "6",
           is_login: "0",
         });
-        // Update agent
-        await OnlineAgent.OnlineAgentRepo.updateAgentSession(
-          data.agent_code,
-          "LOGOUT"
-        );
 
         try {
           return hapiResponse(h, {

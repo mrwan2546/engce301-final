@@ -6,6 +6,7 @@ var fs = require("fs");
 const { parseConfig } = require("./config");
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+console.log(`Env: `, process.env.NODE_ENV || "development");
 
 var apiport = 5006;
 
@@ -13,9 +14,19 @@ const config = {
   ...parseConfig,
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + "/cloud/main.js",
   liveQuery: {
-    classNames: ["OnlineAgentLists", "AgentMessageHistories", "AgentStatusHistories", "UserLoginHistories"], // List of classes to support for query subscriptions
+    classNames: [
+      "OnlineAgentLists",
+      "AgentMessageHistories",
+      "AgentStatusHistories",
+      "UserLoginHistories",
+    ], // List of classes to support for query subscriptions
   },
+  masterKeyIps: ["0.0.0.0/0", "::/0"],
+  useMasterKey: true,
+  allowClientClassCreation: false,
+  allowExpiredAuthDataToken: false,
 };
+console.log(`Parse config: `, config);
 
 const app = express();
 

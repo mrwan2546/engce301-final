@@ -22,7 +22,8 @@ module.exports = {
       },
     },
     parseConfig: {
-      apiURL: "https://localhost:5006/api",
+      
+      apiURL: "https://lab-parse-server.cpe-rmutl.net/team06/api",
       appId: "wallboardapi",
       masterKey: "wallboardapi",
       javascriptKey: "wallboardapi",
@@ -37,8 +38,8 @@ module.exports = {
     },
     sqlConfig: {
       server: "10.21.47.33", //CE Lab Server
-      database: "team0_engce301_db",
-      user: "team0",
+      database: "team6_engce301_db",
+      user: "team6",
       password: "P@ssw0rd",
       port: 1433,
       options: {
@@ -57,4 +58,4 @@ module.exports = {
       javascriptKey: "wallboardapi",
     },
   },
-}["development"];
+}[process.env.NODE_ENV === "production" ? "production" : "development"];
