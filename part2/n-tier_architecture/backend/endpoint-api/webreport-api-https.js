@@ -19,11 +19,8 @@ const apiport = 8443;
 
 var url = require("url");
 const { hapiResponse } = require("./utils/response");
-const { loginSchema, logoutSchema } = require("./schema/login");
-const {
-  getUserByUsername,
-  createLoginNLogoutHistories,
-} = require("./repository/Users");
+const { loginSchema } = require("./schema/login");
+const { getUserByUsername } = require("./repository/Users");
 const { compare } = require("bcrypt");
 const { apiConfig } = require("./config");
 const { getMiddlewareToken } = require("./middleware/token");
@@ -33,10 +30,6 @@ var app = express();
 //init Express Router
 var router = express.Router();
 //var port = process.env.PORT || 87;
-// Init reject HTTP(S)
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false,
-});
 
 //REST route for GET /status
 router.get("/status", function (req, res) {
@@ -406,6 +399,12 @@ const init = async () => {
         ],
         credentials: true,
       },
+      pre: [
+        {
+          method: getMiddlewareToken,
+          assign: "user",
+        },
+      ],
       payload: {
         parse: true,
         allow: ["application/json", "multipart/form-data"],
@@ -413,6 +412,14 @@ const init = async () => {
       },
     },
     handler: async (request, h) => {
+      const user = request.pre.user;
+      if (!user)
+        return hapiResponse(h, {
+          statusCode: 400,
+          message: "Invalid token",
+          data: null,
+        });
+
       let param = request.payload;
 
       const AgentCode = param.AgentCode;
@@ -527,6 +534,12 @@ const init = async () => {
         ],
         credentials: true,
       },
+      pre: [
+        {
+          method: getMiddlewareToken,
+          assign: "user",
+        },
+      ],
       payload: {
         parse: true,
         allow: ["application/json", "multipart/form-data"],
@@ -534,9 +547,17 @@ const init = async () => {
       },
     },
     handler: async (request, h) => {
+      const user = request.pre.user;
+      if (!user)
+        return hapiResponse(h, {
+          statusCode: 400,
+          message: "Invalid token",
+          data: null,
+        });
+
       let param = request.payload;
 
-      const FromAgentCode = param.FromAgentCode;
+      const FromAgentCode = user;
       const ToAgentCode = param.ToAgentCode;
       const Message = param.Message;
       var d = new Date();

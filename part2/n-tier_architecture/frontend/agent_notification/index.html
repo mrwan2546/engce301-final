@@ -246,6 +246,7 @@
           url: APIServer + "/postOnlineAgentStatus",
           headers: {
             Authorization: `Bearer ${serverKey}`,
+            "x-auth-token": localStorage.getItem("token"),
           },
           data: formData,
           success: function (result) {
