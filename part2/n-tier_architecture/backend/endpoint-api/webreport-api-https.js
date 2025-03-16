@@ -15,7 +15,8 @@ const https = require("https");
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const apiport = 8443;
+const apiport = 4006;
+const wsPort = 4016;
 
 var url = require("url");
 const { hapiResponse } = require("./utils/response");
@@ -44,7 +45,7 @@ app.use("/", router);
 //---------------- Websocket Part1 Start -----------------------
 
 var webSocketServer = new (require("ws").Server)({
-  port: process.env.PORT || 3071,
+  port: wsPort,
 });
 
 var clientWebSockets = {}; // userID: webSocket
