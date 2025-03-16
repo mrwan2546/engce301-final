@@ -21,10 +21,10 @@ const config = {
       "UserLoginHistories",
     ], // List of classes to support for query subscriptions
   },
-  masterKeyIps: ["0.0.0.0/0", "::/0"],
-  useMasterKey: true,
-  allowClientClassCreation: false,
-  allowExpiredAuthDataToken: false,
+  // masterKeyIps: ["0.0.0.0/0", "::/0"],
+  // useMasterKey: false,
+  // allowClientClassCreation: false,
+  // allowExpiredAuthDataToken: false,
 };
 console.log(`Parse config: `, config);
 

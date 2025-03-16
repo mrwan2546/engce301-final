@@ -23,6 +23,7 @@ module.exports = {
       appId: "wallboardapi",
       masterKey: "wallboardapi", //Add your master key here. Keep it secret!
       clientKey: "wallboardapi",
+      javascriptKey: "wallboardapi",
       serverURL: "https://lab-parse-server.cpe-rmutl.net/team06/api", // Don't forget to change to https if needed
       publicServerURL: "https://lab-parse-server.cpe-rmutl.net/team06/api",
     },

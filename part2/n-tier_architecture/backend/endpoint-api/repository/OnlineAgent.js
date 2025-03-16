@@ -136,7 +136,7 @@ async function postOnlineAgentStatus(
             "'; "
         );
 
-      await pool.query`insert into [OnlineAgentStatusHistory] (status_from, status_to, agent_code) VALUES(${result.recordset[0].AgentStatus}, ${AgentStatus}, ${result.recordset[0].OnlineAgent_id});`;
+      // await pool.query`insert into [OnlineAgentStatusHistory] (status_from, status_to, agent_code) VALUES(${result.recordset[0].AgentStatus}, ${AgentStatus}, ${result.recordset[0].OnlineAgent_id});`;
       console.dir(result2);
 
       return {
