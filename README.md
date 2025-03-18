@@ -37,19 +37,17 @@ stateDiagram
   [*] --> Still
   Still --> Moving
   Moving --> Crash:Send / Recieve Mesaage
-  Crash --> [*]
   [*] --> s1
-  Still --> s2
   s2 --> Crash:Login / Logoutgett Agent / UpdateAgent
   Crash --> s3
   s3 --> Crash
   s4 --> s5
-  s5 --> Crash:Get agent histories(Message / Login / Logout)
   s5 --> s6
   s6 --> s5
   s6 --> Crash:UpdateAgentstatus
   s6 --> s7
   s7 --> s6
+  s1 --> s2
   Still:PC (Agent)
   Moving:Agent-Notification
   Crash:Endpoint-api
