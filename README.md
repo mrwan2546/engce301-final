@@ -13,7 +13,7 @@ This our Solution for LAB6 in ENGCE301 Class
 
 ##  **API Specification**
 
-Link to API Specification Documentation: [This Link]( ).
+Link to API Specification Documentation: [This Link](./docs/api/README.md).
 
 ## Task
 ### Submission LAB6
