@@ -3,10 +3,10 @@ This README.md file provides an overview of the API documentation for our projec
 
 ## Table of Contents
 - Endpoint API
-  - [/api/v1/login](./endpoint-api/login)
-  - [/api/v1/logout](./endpoint-api/logout)
-  - [/api/v1/postOnlineAgentStatus](./endpoint-api/postOnlineAgentStatus)
-  - [/api/v1/postSendMessage](./endpoint-api/postSendMessage)
+  - [/api/v1/login](./endpoint-api/login.md)
+  - [/api/v1/logout](./endpoint-api/logout.md)
+  - [/api/v1/postOnlineAgentStatus](./endpoint-api/postOnlineAgentStatus.md)
+  - [/api/v1/postSendMessage](./endpoint-api/postSendMessage.md)
 
 - Parse server
   - [/hello](./parse-server/hello.md)
