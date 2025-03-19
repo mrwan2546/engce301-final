@@ -18,16 +18,10 @@ Link to API Specification Documentation: [This Link](./docs/api/README.md).
 ## Task
 ### Submission LAB6
 Our Progress LAb6 Solution [Submission Task](https://lab-wb.cpe-rmutl.net/team06)
-## Test Case Overview
+## Test Case Overview (API)
+You can see test case result in [Test Case Result](./part2/n-tier_architecture/test/test-dashboard.md)
 
-
-
-
-
-
-**Test Case (Agent Notification)**
-
-
+## Test Case (Agent Notification)
 | รายละเอียดการทดสอบ | รายละเอียดการทดสอบ | วิธีการทดสอบ | ผลลัพธ์ที่คาดหวัง | ผลการทดสอบ|
 |----------|----------|----------| ----------| ----------|
 | R 1.1| ตรวจสอบการล็อกอินด้วยรหัสผ่าน|1. เข้าไปที่หน้าเข้าสู่ระบบ 2. กรอกชื่อผู้ใช้และรหัสผ่านที่ถูกต้อง 3. กดปุ่มล็อกอิน | ระบบอนุญาตให้เข้าใช้งานได้หากข้อมูลถูกต้อง | ระบบอนุญาตให้เข้าใช้งานได้ตามที่คาดหวัง|
