@@ -17,7 +17,7 @@ Link to API Specification Documentation: [This Link](./docs/api/README.md).
 
 ## Task
 ### Submission LAB6
-Our Progress LAb6 Solution [Submission Task](https://lab-wb.cpe-rmutl.net/team06)
+Our Progress LAb6 Solution [Submission Task](https://lab-wb.cpe-rmutl.net/team06/#/wallboard)
 ## Test Case Overview (API)
 You can see test case result in [Test Case Result](./part2/n-tier_architecture/test/test-dashboard.md)
 
